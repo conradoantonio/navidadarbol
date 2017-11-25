@@ -159,3 +159,7 @@ Route::post('/app/obtener_pedidos_usuario','dataAppController@obtener_pedidos_us
 Route::post('/app/enviar_correo_detalle_orden','dataAppController@enviar_correo_detalle_orden');//Envía un correo electrónico con los detalles de la orden.
 Route::post('/app/enviar_correo_detalle_cotizacion','dataAppController@enviar_correo_detalle_cotizacion');//Envía un correo electrónico con los detalles de la cotización.
 Route::get('/app/menu_detalles','dataAppController@categorias');//Envía un correo electrónico con los detalles de la cotización.
+
+#onesignal
+Route::post('/app/actualizar_player_id','dataAppController@actualizar_player_id');//Actualiza el player id de un usuario de la aplicación
+Route::post('/app/test', 'dataAppController@test');

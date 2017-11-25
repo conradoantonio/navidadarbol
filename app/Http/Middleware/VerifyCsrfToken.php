@@ -47,5 +47,7 @@ class VerifyCsrfToken extends BaseVerifier
         '/app/calificar_servicio',
         '/app/agregar_favorito',
         '/app/remover_favorito',
+        '/app/actualizar_player_id',
+        '/app/test',
     ];
 }

@@ -40,6 +40,10 @@ class dataAppController extends Controller
     function __construct() {
         date_default_timezone_set('America/Mexico_City');
         $this->actual_datetime = date('Y-m-d H:i:s');
+        $this->app_id = "ca42c5c4-5e4e-499c-86f7-164bcb911b13";
+        $this->app_key = "OWIyYThiZTQtMjI1Mi00OTQ5LWExMjktMDZjMWMwY2FjYTI0";
+        $this->small_icon = "https://navidad.belyapp.com/img/small_icon.png";
+        $this->regular_icon = "https://navidad.belyapp.com/img/regular_icon.png";
     }
     /**
      * Crea un nuevo usuario en caso de que el email proporcionado no se haya utilizado antes para un usuario.
@@ -71,6 +75,7 @@ class dataAppController extends Controller
             $usuario_app->correo = $request->correo;
             $request->foto_perfil ? $usuario_app->foto_perfil = $request->foto_perfil : '';
             $usuario_app->red_social = $request->red_social;
+            $usuario_app->player_id = $request->player_id;
             $usuario_app->status = 1;
             $usuario_app->created_at = $this->actual_datetime;
 
@@ -603,11 +608,15 @@ class dataAppController extends Controller
             $this->guardar_detalles_servicio($servicio->id, $request->productos);
 
             if ($oxxo) {
+                $referencia = $order->charges[0]->payment_method->reference;
+                $total = $order->amount/100;
+                $moneda = $order->currency;
+                $this->enviar_correo_referencia_oxxo($referencia, $total, $moneda, $servicio->correo_cliente);
                 //$this->enviar_num_referencia_correo($order->charges[0]->payment_method->reference, "$". $order->amount/100 . $order->currency);
                 return [
                     'msg' => 'Pago con OXXO PAY solicitado', 
-                    'reference' => $order->charges[0]->payment_method->reference, 
-                    'total_to_pay' => "$". $order->amount/100 . ' ' .$order->currency
+                    'reference' => $referencia, 
+                    'total_to_pay' => "$". $total. ' ' .$moneda
                 ];
 
             } else {
@@ -771,81 +780,127 @@ class dataAppController extends Controller
     }
 
     /**
+     * Envía un correo con el número de referencia
+     * 
+     */
+    public function enviar_correo_referencia_oxxo($referencia, $total, $moneda, $correo_cliente)
+    {
+        Mail::send('emails.oxxo', ['total' => $total, 'referencia' => $referencia], function ($message)  use ($correo_cliente)
+        {
+            $message->from('soporte@belyapp.com', 'Papá Noel');
+            $message->to($correo_cliente);
+            $message->subject('Papá Noel | Número de referencia OXXO');
+        });
+    }
+    
+    /**
      *==================================================================================================================================================================
      *=                                                    Finalizan las funciones relacionadas a la api de conekta                                                    =
      *==================================================================================================================================================================
      */
 
     /**
-     *==================================================================================================================================================================
-     *=                                                     Empiezan las funciones relacionadas a las cotizaciones                                                     =
-     *==================================================================================================================================================================
+     *===================================================================================================================================================================
+     *=                                       Empiezan las funciones relacionadas a las notificaciones usando la api de onesignal                                       =
+     *===================================================================================================================================================================
      */
-
 
     /**
-     * Envía correos con los detalles de un pedido al correo de un usuario.
+     * Actualiza el player_id de un usuario
      * 
+     * @return json
      */
-    public function enviar_correo_detalle_orden(Request $req)
+    public function actualizar_player_id(Request $req)
     {
-        $id = DB::table('pedidos')->where('id', $req->pedido_id)->pluck('conekta_order_id');
-        $orden = DB::table('pedidos')->where('id', $req->pedido_id)->first();
-        $productos = DB::table('pedido_detalles')->where('pedido_id', $req->pedido_id)->get();
-        $orden_conekta = \Conekta\Order::find($id);
-        $total = 0;
+        $user = Usuario::find($req->usuario_id);
+        $user->player_id = $req->player_id;
+        $user->save();
 
-        $nombre_cliente = $orden_conekta->customer_info['name'];
-        $email_cliente = $orden_conekta->customer_info['email'];
-        $telefono_cliente = $orden_conekta->customer_info['phone'];
-        $enviado = false;
-        $subject = "Detalles de su orden";
-        $to = $req->email;
-        $msg = "<h3>A continuación se muestran los detalles de su orden</h3>";
+        return response(['msg' => 'Player ID modificado con éxito'], 200);
+    }
 
-        $msg .= "<div><p style='font-weight: bold;'>Nombre cliente: <span style='font-weight: normal'>$nombre_cliente</span></p></div>".
-                "<div><p style='font-weight: bold;'>Email cliente: <span style='font-weight: normal'>$email_cliente</span></p></div>".
-                "<div><p style='font-weight: bold;'>Teléfono cliente: <span style='font-weight: normal'>$telefono_cliente</span></p></div>";
+    /**
+    * Envía una notificación a todos los usuarios de la aplicación
+    * @return $response
+    */
+    public function enviar_notificacion_a_todos() 
+    {
+        $content = array(
+            "en" => 'English Message'
+        );
+        
+        $fields = array(
+            'app_id' => $this->app_customer_id,//"15c4f224-e280-436d-9bb8-481c11fb4c3c",
+            'included_segments' => array('All'),
+            'data' => array("foo" => "bar"),
+            'contents' => $content
+        );
+        
+        $fields = json_encode($fields);
+        /*print("\nJSON sent:\n");
+        print($fields);*/
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8',
+                                                   'Authorization: Basic ODAwMjZlM2QtNDNhYy00YTRhLWI1YWUtMGQyOWFkMjcwNDY4'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 
-        $recibidor = $orden->recibidor;
-        $guia = $orden->num_seguimiento;
-        $calle = $orden->calle;
-        $estado = $orden->estado;
-        $ciudad = $orden->ciudad;
-        $cp = $orden->codigo_postal;
-        $costo_envio = $orden->costo_envio/100;
-        $costo_total = $orden->costo_total/100;
-        $msg .= "<br><h3>Información de envío: </h3>".
-                "<div><p style='font-weight: bold;'>Persona que recibirá el pedido: <span style='font-weight: normal'>$recibidor</span></p></div>".
-                "<div><p style='font-weight: bold;'>Número de guía: <span style='font-weight: normal'>$guia</span></p></div>".
-                "<div><p style='font-weight: bold;'>Costo envío: <span style='font-weight: normal'>$$costo_envio</span></p></div>".
-                "<div><p style='font-weight: bold;'>Dirección: <span style='font-weight: normal'>$calle</span></p></div>".
-                "<div><p style='font-weight: bold;'>Código postal: <span style='font-weight: normal'>$cp</span></p></div>".
-                "<div><p style='font-weight: bold;'>País: <span style='font-weight: normal'>México</span></p></div>".
-                "<div><p style='font-weight: bold;'>Estado: <span style='font-weight: normal'>$estado</span></p></div>".
-                "<div><p style='font-weight: bold;'>Ciudad: <span style='font-weight: normal'>$ciudad</span></p></div>";
+        $response = curl_exec($ch);
+        curl_close($ch);
+        
+        //return $response;
+    }
 
-        $msg .= "<br><h3>Productos encargados: </h3>";
-        foreach ($productos as $producto) {
-            $src = 'https://belyapp.com/'.$producto->foto_producto;
-            $nombre_producto = $producto->nombre_producto;
-            $cantidad = $producto->cantidad;
-            $precio = $producto->precio/100;
-            $msg .= "<div>$nombre_producto $$precio (x$cantidad)</div>".
-                    "<br><div><img width='150px;' height='150px;' src=$src></div>";
-        }
+    /**
+    * Envía una notificación individual a un usuario que puede ser repartidor o cliente
+    * @return $response
+    */
+    public function enviar_notificacion_individual($title, $mensaje, $data, $player_ids)
+    {
+        $content = array(
+            "en" => $mensaje
+        );
+        $header = array(
+            "en" => $title
+        );
+        
+        $fields = array(
+            'app_id' => $this->app_id,
+            'include_player_ids' => $player_ids,
+            'data' => $data,
+            'headings' => $header,
+            'contents' => $content,
+            'small_icon' => $this->small_icon,
+            'large_icon' => $this->regular_icon
+        );
+        
+        
+        $fields = json_encode($fields);
+ 
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8',
+                                                   "Authorization: Basic $this->app_key"));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 
-        $msg .= "<br><div>Costo total: $$costo_total</div>";
+        $response = curl_exec($ch);
+        curl_close($ch);
+    }
 
-        $enviado = Mail::send([], [], function ($message) use($to, $subject, $msg) {
-            $message->to($to)
-            ->subject($subject)
-            ->setBody($msg, 'text/html'); // for HTML rich messages
-        });
-
-        if ($enviado) {
-            return ['msg'=>'Enviado'];
-        }
-        return ['msg' => 'Error enviando el mensaje'];
+    /**
+    * Esta función únicamente se usará para pruebas y puede variar su contenido y response
+    * @return $response
+    */
+    public function test() {
+        return;
     }
 }

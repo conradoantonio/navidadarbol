@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Usuario;
 use App\Servicio;
 use App\Estilista;
 use App\ServicioDetalle;
@@ -68,6 +69,12 @@ class ServiciosController extends Controller
         ->update(['num_guia' => $num_guia, 'paqueteria' => $paqueteria]);
 
         if ($servicio) {
+            $servicio = Servicio::where('id', $order_id)->first();
+            $player_id [] = Usuario::obtener_player_id($servicio->usuario_id);
+            $titulo = '¡Número de guía asignado!';
+            $mensaje = "Su pedido con el número $order_id se le ha asignado la guía con el número $num_guia con la paquetería $paqueteria, vaya al módulo de pedidos para consultar esta información.";
+            $data = array('msg' => 'Número de guía asignado');
+            app('App\Http\Controllers\dataAppController')->enviar_notificacion_individual($titulo, $mensaje, $data, $player_id);
             /*$row = Servicio::where('id', $order_id)->first();
             $correo = $row->correo_cliente;
             $date = $row->created_at;
@@ -104,10 +111,18 @@ class ServiciosController extends Controller
             if ($type == 'charge.paid') {//Se verifica que sea un cargo pagado
                 $order_id = $data->data->object->order_id;
                 Servicio::where('conekta_order_id', $order_id)->update(['status' => 'paid']);
-
                 $servicio = Servicio::where('conekta_order_id', $order_id)->first();
-
+                
                 if ($servicio) {
+                    if ($servicio->tipo_orden == 'oxxo') {//Se manda la notificación por onesignal
+                        $player_id [] = Usuario::obtener_player_id($servicio->usuario_id);
+                        $titulo = '¡Pago por oxxo exitoso!';
+                        $mensaje = "Gracias por pagar a tiempo y forma su pedido solicitado por OXXO pay. Pronto se le asignará un número de guía para que pueda obtener muy pronto de su pedido.";
+                        $data = array('msg' => 'Pedido por OXXO pay pagado');
+                        
+                        app('App\Http\Controllers\dataAppController')->enviar_notificacion_individual($titulo, $mensaje, $data, $player_id);
+                    }
+                    
                     $correo = $servicio->correo_cliente;
                     $monto = $servicio->costo_total / 100;
 

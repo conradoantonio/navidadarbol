@@ -32,12 +32,27 @@ class Usuario extends Model
         ->get();
     }
 
+    /**
+     * Obtiene el player_id del usuario para enviar notificaciones
+     */
+    public static function obtener_player_id($id)
+    {
+        return Usuario::where('id', '=', $id)
+        ->pluck('player_id');
+    }
+
+    /**
+     * Obtiene el id de conekta del cliente por su id
+     */
     public static function buscar_id_conekta_usuario_app($correo)
     {
     	return Usuario::where('correo', '=', $correo)
         ->pluck('customer_id_conekta');
     }
 
+    /**
+     * Actualiza el id del cliente en conekta 
+     */
     public static function actualizar_id_conekta_usuario_app($correo, $customer_id_conekta)
     {
     	return Usuario::where('correo', '=', $correo)
