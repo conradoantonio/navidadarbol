@@ -40,6 +40,14 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-sm-12 col-xs-12">
+                                <div class="alert alert-info alert-dismissible text-left" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                                    <strong>Nota: </strong><br>
+                                    - Suba imágenes de 600x1000 px, ya que el sistema redimensionará automáticamente a estas medidas<br>
+                                    - Solo se admiten archivos menores a 5mb
+                                </div>
+                            </div>
                             <div class="col-sm-12 col-xs-12" id="input_foto_producto">
                                 <div class="form-group">
                                     <label for="foto-usuario">Foto</label>

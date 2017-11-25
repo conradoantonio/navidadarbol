@@ -282,7 +282,7 @@ class CategoriaFotosController extends Controller
             if (array_search($extension_archivo, $extensiones_permitidas)) {
                 $name = 'img/colores/'.time().'.'.$extension_archivo;
                 $foto = Image::make($foto)
-                ->resize(300, 300)
+                ->resize(50, 50)
                 ->save($name);
                 $color->foto = $name;
             }
@@ -315,7 +315,7 @@ class CategoriaFotosController extends Controller
                     //$name = 'img/colores/'.$foto->getClientOriginalName();
                     $name = 'img/colores/'.time().'.'.$extension_archivo;
                     $foto = Image::make($foto)
-                    ->resize(300, 300)
+                    ->resize(50, 50)
                     ->save($name);
                     $color->foto = $name;
                 }

@@ -18,9 +18,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" onsubmit="return false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="titulo_cargado_fotos">Cargado de fotos</h4>
+                    <h4 class="modal-title" id="titulo_cargado_fotos">Cargado de colores</h4>
                 </div>
-                <form id="form_colores" action="{{url('cargar_fotos_categorias/subir')}}" onsubmit="return false" enctype="multipart/form-data" method="POST" autocomplete="off">
+                <form id="form_colores" action="" onsubmit="return false" enctype="multipart/form-data" method="POST" autocomplete="off">
                     <div class="modal-body">
                         <div class="row">
                             {!! csrf_field() !!}
@@ -34,6 +34,14 @@
                                 <div class="form-group">
                                     <label for="color">Nombre color</label>
                                     <input type="text" class="form-control" id="color" name="color">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-xs-12">
+                                <div class="alert alert-info alert-dismissible text-left" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                                    <strong>Nota: </strong><br>
+                                    - Suba imágenes de 50x50, ya que el sistema redimensionará automáticamente a estas medidas<br>
+                                    - Solo se admiten archivos menores a 5mb
                                 </div>
                             </div>
                             <div class="col-sm-12 col-xs-12" id="input_foto_producto">

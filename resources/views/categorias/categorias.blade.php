@@ -84,7 +84,7 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <h2>Asignar fotos a categorías</h2>
+    <h2>Asignar colores a categorías</h2>
     <div class="row-fluid">
         <div class="span12">
             <div class="grid simple ">
