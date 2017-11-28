@@ -149,19 +149,16 @@ class dataAppController extends Controller
             Usuario::where('correo', $correo)
             ->update(['password' => md5($new_pass)]);
 
-            $msg = "Se ha cambiado la contraseña para el acceso a la aplicación Bely.".
-            "\nSu nueva contraseña es: ".$new_pass.
-            "\nNo brinde a ninguna persona información confidencial sobre sus contraseñas o tarjetas.";
-            $subject = "Restablecimiento de contraseña";
+            $subject = "Papá Noel | Restablecimiento de contraseña";
             $to = $correo;
 
-            $enviado = Mail::raw($msg, function($message) use ($to, $subject) {
-                $message->to($to)->subject($subject);
+            Mail::send('emails.recuperar_usuario', ['contra' => $new_pass], function ($message)  use ($to, $subject)
+            {
+                $message->to($to);
+                $message->subject($subject);
             });
 
-            if ($enviado) {
-                return ['msg' => 'Enviado', 'secret' => $new_pass];
-            }
+            return ['msg' => 'Enviado'];
         }
 
         return ['msg' => 'Error al enviar correo'];
@@ -543,7 +540,7 @@ class dataAppController extends Controller
                 "shipping_lines" => array(
                     array(
                         "amount" => $costo_envio,
-                        "carrier" => "Árboles navideños"
+                        "carrier" => "Papá Noel"
                     )
                 ), //shipping_lines
                 "currency" => "MXN",
@@ -682,28 +679,6 @@ class dataAppController extends Controller
     }
 
     /**
-     * Envía correos que notifican de una compra exitosa a la empresa que se dio el pedido.
-     * 
-     */
-    public function enviar_correos_pedidos($empresa_id)
-    {
-        $enviado = false;
-        $msg = "Se ha realizado una nueva compra, porfavor, vaya al panel de administración de conekta".
-        "\no al módulo de pedidos en su panel administrativo de la aplicación para ver los detalles de la compra";
-        $subject = "Nueva compra realizada.";
-        $to = "marcosalfaro@gmail.com";
-        
-        $enviado = Mail::raw($msg, function($message) use ($to, $subject) {
-            $message->to($to)->subject($subject);
-        });
-
-        if ($enviado) {
-            return ['msg'=>'Enviado'];
-        }
-        return ['msg' => 'Error enviando el mensaje'];
-    }
-
-    /**
      * Guarda una orden de paypal.
      * 
      */
@@ -787,7 +762,6 @@ class dataAppController extends Controller
     {
         Mail::send('emails.oxxo', ['total' => $total, 'referencia' => $referencia], function ($message)  use ($correo_cliente)
         {
-            $message->from('soporte@belyapp.com', 'Papá Noel');
             $message->to($correo_cliente);
             $message->subject('Papá Noel | Número de referencia OXXO');
         });
@@ -823,10 +797,19 @@ class dataAppController extends Controller
     * Envía una notificación a todos los usuarios de la aplicación
     * @return $response
     */
-    public function enviar_notificacion_a_todos() 
+    public function enviar_notificacion_a_todos(Request $req) 
     {
+        $mensaje = $req->mensaje;
+        $titulo = $req->titulo;
+        $titulo = $req->titulo;
+
+
         $content = array(
             "en" => 'English Message'
+        );
+
+        $header = array(
+            "en" => $title
         );
         
         $fields = array(

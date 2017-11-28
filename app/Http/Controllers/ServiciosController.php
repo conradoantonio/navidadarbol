@@ -75,21 +75,23 @@ class ServiciosController extends Controller
             $mensaje = "Su pedido con el número $order_id se le ha asignado la guía con el número $num_guia con la paquetería $paqueteria, vaya al módulo de pedidos para consultar esta información.";
             $data = array('msg' => 'Número de guía asignado');
             app('App\Http\Controllers\dataAppController')->enviar_notificacion_individual($titulo, $mensaje, $data, $player_id);
-            /*$row = Servicio::where('id', $order_id)->first();
-            $correo = $row->correo_cliente;
-            $date = $row->created_at;
 
-            $to = $correo;
-            $subject = "¡Su pedido ya está en camino!";
-            $msg = "Se ha asignado un número de guía para su pedido realizado el $date desde la aplicación árboles de navidad.".
-            "\nNúmero de guía: $num_guia ($paqueteria)";
+            $to = $servicio->correo_cliente;
+            $fecha = $servicio->datetime_formated;
+            $monto = $servicio->costo_total / 100;
+            $nombre_cliente = $servicio->nombre_cliente;
 
-            $enviado = Mail::raw($msg, function($message) use ($to, $subject) {
-                $message->to($to)->subject($subject);
-            });*/
-            return ['msg' => 'Número de guía asignado correctamente'];
+            $subject = "Papá Noel | ¡Número de guía asignado!";
+
+            Mail::send('emails.guia_asignada', ['nombre_cliente' => $nombre_cliente, 'order_id' => $order_id, 'num_guia' => $num_guia, 'paqueteria' => $paqueteria, 'monto' => $monto, 'fecha' => $fecha], function ($message)  use ($to, $subject)
+            {
+                $message->to($to);
+                $message->subject($subject);
+            });
+
+            return response(['msg' => 'Número de guía asignado correctamente', 'status' => 'ok'], 200);
         } else {
-            return ['msg' => 'El pedido no es válido para asignar un número de guía'];
+            return response(['msg' => 'El pedido no es válido para asignar un número de guía', 'status' => 'Not found'], 404);
         }
     }
 
@@ -117,21 +119,22 @@ class ServiciosController extends Controller
                     if ($servicio->tipo_orden == 'oxxo') {//Se manda la notificación por onesignal
                         $player_id [] = Usuario::obtener_player_id($servicio->usuario_id);
                         $titulo = '¡Pago por oxxo exitoso!';
-                        $mensaje = "Gracias por pagar a tiempo y forma su pedido solicitado por OXXO pay. Pronto se le asignará un número de guía para que pueda obtener muy pronto de su pedido.";
+                        $mensaje = "Gracias por pagar en tiempo y forma su pedido solicitado por OXXO pay. Pronto se le asignará un número de guía para que pueda recibir satisfactoriamente su pedido.";
                         $data = array('msg' => 'Pedido por OXXO pay pagado');
                         
                         app('App\Http\Controllers\dataAppController')->enviar_notificacion_individual($titulo, $mensaje, $data, $player_id);
                     }
                     
-                    $correo = $servicio->correo_cliente;
+                    $to = $servicio->correo_cliente;
                     $monto = $servicio->costo_total / 100;
+                    $nombre_cliente = $servicio->nombre_cliente;
 
-                    $msg = "Se le confirma que su pago por la cantidad de $$monto realizado desde nuestra aplicación Árboles navideños ha sido registrado exitosamente en nuestro sistema.";
-                    $subject = "Confirmación de pago";
-                    $to = $correo;
+                    $subject = "Papá Noel | Confirmación de pago";
 
-                    $enviado = Mail::raw($msg, function($message) use ($to, $subject) {
-                        $message->to($to)->subject($subject);
+                    Mail::send('emails.pago_confirmado', ['nombre_cliente' => $nombre_cliente, 'monto' => $monto], function ($message)  use ($to, $subject)
+                    {
+                        $message->to($to);
+                        $message->subject($subject);
                     });
                 }//If para verificar que exista una orden con dicho order_id
             }//If para verificar status del pago

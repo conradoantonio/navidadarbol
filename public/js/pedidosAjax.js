@@ -157,6 +157,8 @@ function refreshTable(url) {
     $('div#tabla_pedidos').empty();
     $('div#tabla_pedidos').load(url, function() {
         $('div#tabla_pedidos').fadeIn();
-        $("table#example3").dataTable();
+        $("table#example3").dataTable({
+            "aaSorting": [[ 0, "desc" ]]
+        });
     });
 }
