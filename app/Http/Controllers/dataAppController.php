@@ -794,52 +794,6 @@ class dataAppController extends Controller
     }
 
     /**
-    * Envía una notificación a todos los usuarios de la aplicación
-    * @return $response
-    */
-    public function enviar_notificacion_a_todos(Request $req) 
-    {
-        $mensaje = $req->mensaje;
-        $titulo = $req->titulo;
-        $titulo = $req->titulo;
-
-
-        $content = array(
-            "en" => 'English Message'
-        );
-
-        $header = array(
-            "en" => $title
-        );
-        
-        $fields = array(
-            'app_id' => $this->app_customer_id,//"15c4f224-e280-436d-9bb8-481c11fb4c3c",
-            'included_segments' => array('All'),
-            'data' => array("foo" => "bar"),
-            'contents' => $content
-        );
-        
-        $fields = json_encode($fields);
-        /*print("\nJSON sent:\n");
-        print($fields);*/
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8',
-                                                   'Authorization: Basic ODAwMjZlM2QtNDNhYy00YTRhLWI1YWUtMGQyOWFkMjcwNDY4'));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-        curl_setopt($ch, CURLOPT_POST, TRUE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-        
-        //return $response;
-    }
-
-    /**
     * Envía una notificación individual a un usuario que puede ser repartidor o cliente
     * @return $response
     */

@@ -108,7 +108,12 @@ Route::post('/configuracion/info_empresa/guardar','ConfiguracionController@guard
 Route::post('/configuracion/info_empresa/editar','ConfiguracionController@editar_info_empresa');//Edita la información de la empresa.
 
 /*-- Ruta para iframe --*/
-Route::get('/notificaciones_app','ionicController@index');//Carga el login de ionic
+Route::group(['prefix' => 'notificaciones_app', 'middleware' => 'auth'], function () {
+	Route::get('/','NotificacionesController@index');//Carga el panel para mandar notificaciones a la aplicación.
+	Route::post('/enviar/general','NotificacionesController@enviar_notificacion_general');//Carga el panel para mandar notificaciones a la aplicación.
+	Route::post('/enviar/individual','NotificacionesController@index');//Carga el panel para mandar notificaciones a la aplicación.
+});
+
 
 /*-- Ruta para cargar codigo postales desde excel --*/
 Route::post('/cargar/codigo_postal','ExcelController@cargar_excel_cp');//Carga un excel con los códigos postales de jalisco
