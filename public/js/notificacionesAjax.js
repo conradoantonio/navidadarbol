@@ -11,23 +11,34 @@ function enviarNotificacion(form,btn) {
         contentType: false,
         processData: false,
         success: function(data) {
-            console.log(data);
-            swal({
-                title: "Notificacion enviada.",
-                type: "success",
-                showConfirmButton: true,
-            });
-            $('#modal-cargar-fotos').modal('hide');
+            obj = JSON.parse(data);
+            console.log(obj);
+            if (obj.hasOwnProperty('errors')) {
+                swal({
+                    title: "Notificación no enviada, hay datos inválidos.",
+                    text: "Porfavor, revise que la información introducida en el formulario sea correcta.<br><span style='color:#F8BB86'>\nMensaje de error: " + obj.errors +"</span>",
+                    type: "error",
+                    html: true,
+                    showConfirmButton: true,
+                });
+            } else {
+                swal({
+                    title: "Notificacion enviada.",
+                    type: "success",
+                    showConfirmButton: true,
+                });
+            }
+            
             btn.children('i').hide();
             btn.attr('disabled', false);
-            //refreshTable(window.location.href);
         },
         error: function(xhr, status, error) {
             btn.children('i').hide();
             btn.attr('disabled', false);
             swal({
                 title: "<small>¡Error!</small>",
-                text: "Se encontró un problema salvando este registro, porfavor, trate nuevamente.<br><span style='color:#F8BB86'>\nError: " + xhr.status + " (" + error + ") "+"</span>",
+                type: "error",
+                text: "Se encontró un problema de parte de nuestro servidor al momento de enviar la notificación, porfavor, trate nuevamente.<br><span style='color:#F8BB86'>\nError: " + xhr.status + " (" + error + ") "+"</span>",
                 html: true
             });
         }

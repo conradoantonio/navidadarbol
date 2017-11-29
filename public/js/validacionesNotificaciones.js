@@ -33,9 +33,9 @@ $("#enviar_notificacion_individual").on('click', function() {
     inputs = [];
     msgError = '';
 
-    validarSelect($('select#usuarios_id')) == false ? inputs.push('Usuarios') : ''
     validarInput($('input#titulo_individual'), regExprTitulo) == false ? inputs.push('Título') : ''
     validarInput($('textarea#mensaje_individual'), regExprContenido) == false ? inputs.push('Mensaje') : ''
+    validarSelect($('select#usuarios_id')) == false ? inputs.push('Usuarios') : ''
 
     if (inputs.length == 0) {
         $(this).children('i').show();
@@ -53,9 +53,9 @@ $( "input#titulo_individual" ).blur(function() {
 $( "textarea#mensaje_individual" ).blur(function() {
     validarInput($(this), regExprContenido);
 });
-/*$( "select#usuarios_id" ).change(function() {
+$( "select#usuarios_id" ).change(function() {
     validarSelect($(this));
-});*/
+});
 
 
 function validarInput (campo,regExpr) {
@@ -71,11 +71,11 @@ function validarInput (campo,regExpr) {
 
 function validarSelect (select) {
     if ($(select).val() == '0' || $(select).val() == '' || $(select).val() == null) {
-        $(select).parent().addClass("has-error");
+        $(select).parent().children('div.select2').children('ul.select2-choices').addClass("select-error");
         msgError = msgError + $(select).parent().children('label').text() + '\n';
         return false;
     } else {
-        $(select).parent().removeClass("has-error");
+        $(select).parent().children('div.select2').children('ul.select2-choices').removeClass("select-error");
         return true;
     }
 }

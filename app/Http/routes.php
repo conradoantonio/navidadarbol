@@ -107,11 +107,11 @@ Route::get('/configuracion/info_empresa','ConfiguracionController@info_empresa')
 Route::post('/configuracion/info_empresa/guardar','ConfiguracionController@guardar_info_empresa');//Guarda la información de la empresa.
 Route::post('/configuracion/info_empresa/editar','ConfiguracionController@editar_info_empresa');//Edita la información de la empresa.
 
-/*-- Ruta para iframe --*/
+/*-- Rutas para las notificaciones --*/
 Route::group(['prefix' => 'notificaciones_app', 'middleware' => 'auth'], function () {
 	Route::get('/','NotificacionesController@index');//Carga el panel para mandar notificaciones a la aplicación.
-	Route::post('/enviar/general','NotificacionesController@enviar_notificacion_general');//Carga el panel para mandar notificaciones a la aplicación.
-	Route::post('/enviar/individual','NotificacionesController@index');//Carga el panel para mandar notificaciones a la aplicación.
+	Route::post('/enviar/general','NotificacionesController@enviar_notificacion_general');//Manda una notificación a todos los usuarios suscritos de la aplicación.
+	Route::post('/enviar/individual','NotificacionesController@enviar_notificacion_individual');//Manda una notificación a los usuarios seleccionados de la áplicación.
 });
 
 
