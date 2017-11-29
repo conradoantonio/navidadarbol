@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/bootstrap-select2/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('css/animate.min.css')}}"  type="text/css"/>
     <link rel="stylesheet" href="{{ asset('css/style.css')}}" type="text/css"/>
+    <link rel="stylesheet" href="{{ asset('css/custom.css')}}" type="text/css"/>
     <link rel="stylesheet" href="{{ asset('css/responsive.css')}}" type="text/css"/>
     <link rel="stylesheet" href="{{ asset('css/custom-icon-set.css')}}" type="text/css"/>
     {{-- <link rel="stylesheet" href="{{ asset('css/select2.min.css')}}" type="text/css"/> --}}
@@ -66,7 +67,7 @@
                     <ul class="nav quick-section">
                         <li class="quicklinks">
                             <a href="#" class="" id="layout-condensed-toggle">
-                                <div class="iconset top-menu-toggle-dark"></div>
+                                <div class="iconset top-menu-toggle-white"></div>{{-- En vez de white, cambiar a dark --}}
                             </a>
                         </li>
                     </ul>
@@ -98,7 +99,7 @@
                         <!-- BEGIN SETTINGS -->
                         <li class="quicklinks"> 
                             <a data-toggle="dropdown" class="dropdown-toggle pull-right" href="#" id="user-options">                        
-                                <div class="iconset top-settings-dark"></div>   
+                                <div class="iconset top-settings"></div>{{-- Se le agrega un -dark al final --}}
                             </a>
                             <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="user-options">
                                 <li><a data-toggle="modal" data-target="#cambiar_foto_usuario_sistema" href="#"><i class="fa fa-picture-o" aria-hidden="true"></i> Cambiar foto perfil</a></li>
@@ -123,161 +124,133 @@
     <div class="page-container row-fluid">
         <!-- BEGIN SIDEBAR -->
         <!-- BEGIN MENU -->
-        <div class="page-sidebar" id="main-menu"> 
+        <div class="page-sidebar menu-picture" id="main-menu"> 
             <div class="page-sidebar-wrapper scrollbar-dynamic" id="main-menu-wrapper">
-            <!-- BEGIN MINI-PROFILE -->
-            <div class="user-info-wrapper"> 
-                <div class="profile-wrapper">
-                    <img src=" {{ asset(Auth::user()->foto_usuario) }}" alt="" data-src=" {{ asset(Auth::user()->foto_usuario) }}" data-src-retina=" {{ asset(Auth::user()->foto_usuario) }}" width="69" height="69" />
+                <!-- BEGIN MINI-PROFILE -->
+                <div class="user-info-wrapper"> 
+                    <div class="profile-wrapper">
+                        <img src=" {{ asset(Auth::user()->foto_usuario) }}" alt="" data-src=" {{ asset(Auth::user()->foto_usuario) }}" data-src-retina=" {{ asset(Auth::user()->foto_usuario) }}" width="69" height="69" />
+                    </div>
+                    <div class="user-info">
+                        <div class="greeting">Bienvenido</div>
+                        <div class="username"><span class="semi-bold">{{Auth::user()->user}}</span></div>
+                        <div class="status">Status<a href="#"><div class="status-icon green"></div>Online</a></div>
+                    </div>
                 </div>
-                <div class="user-info">
-                    <div class="greeting">Bienvenido</div>
-                    <div class="username"><span class="semi-bold">{{Auth::user()->user}}</span></div>
-                    <div class="status">Status<a href="#"><div class="status-icon green"></div>Online</a></div>
-                </div>
+                <!-- END MINI-PROFILE -->
+                <!-- BEGIN SIDEBAR MENU --> 
+                <p class="menu-title">Secciones<span class="pull-right"><a href=""><i class="fa fa-refresh"></i></a></span></p>
+                <ul>    
+                    <!-- BEGIN SELECTED LINK -->
+                    <li class="start {{$menu == 'Inicio' ? 'active' : ''}}">
+                        <a href="<?php echo url();?>/dashboard">
+                            <i class="icon-custom-home"></i>
+                            <span class="title">Inicio</span>
+                            <span class="selected"></span>
+                        </a>
+                    </li>
+                    <!-- END SELECTED LINK -->
+
+                    <!-- BEGIN SINGLE LINK -->
+                    <li class="{{$menu == 'Pedidos' ? 'active' : ''}}">
+                        <a href="{{url('pedidos')}}">
+                            <i class="fa fa-cubes" aria-hidden="true"></i>
+                            <span class="title">Pedidos</span>
+                        </a>
+                    </li>
+                    <!-- END SINGLE LINK -->
+
+                    <!-- BEGIN SINGLE LINK -->
+                    <li class="{{$menu == 'Colores' ? 'active' : ''}}">
+                        <a href="<?php echo url();?>/colores">
+                            <i class="fa fa-upload" aria-hidden="true"></i>
+                            <span class="title">Cargar colores</span>
+                        </a>
+                    </li>
+                    <!-- END SINGLE LINK -->
+
+                    <!-- BEGIN SINGLE LINK -->
+                    <li class="{{$menu == 'Asigar colores categoría' ? 'active' : ''}}">
+                        <a href="<?php echo url();?>/asignar_color_categorias">
+                            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                            <span class="title">Asigar colores categoría</span>
+                        </a>
+                    </li>
+                    <!-- END SINGLE LINK -->
+
+                    <!-- BEGIN SINGLE LINK -->
+                    <li class="{{$menu == 'Asigar fotos categoría' ? 'active' : ''}}">
+                        <a href="<?php echo url();?>/asignar_foto_categorias">
+                            <i class="fa fa-picture-o" aria-hidden="true"></i>
+                            <span class="title">Asigar fotos categoría</span>
+                        </a>
+                    </li>
+                    <!-- END SINGLE LINK -->
+                    
+                    <!-- BEGIN SINGLE LINK -->
+                    <li class="{{$menu == 'Productos' ? 'active' : ''}}">
+                        <a href="{{url('productos')}}">
+                            <i class="fa fa-tree" aria-hidden="true"></i>
+                            <span class="title">Productos</span>
+                        </a>
+                    </li>
+                    <!-- END SINGLE LINK -->
+
+                    <!-- BEGIN SINGLE LINK -->
+                    <li class="{{$menu == 'Noticias' ? 'active' : ''}}">
+                        <a href="{{url('noticias')}}">
+                            <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+                            <span class="title">Noticias</span>
+                        </a>
+                    </li>
+                    <!-- END SINGLE LINK -->
+
+                    <!-- BEGIN SINGLE LINK -->
+                    <li class="{{$menu == 'Ionic' ? 'active' : ''}}">
+                        <a href="<?php echo url();?>/notificaciones_app">
+                            <i class="fa fa-bell" aria-hidden="true"></i>
+                            <span class="title">Notificaciones app</span>
+                        </a>
+                    </li>
+                    <!-- END SINGLE LINK -->
+                    
+                    <!-- BEGIN ONE LEVEL MENU -->
+                    <li class="{{$menu == 'Usuarios' ? 'open start' : ''}}">
+                        <a href="javascript:;">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            <span class="title">Usuarios</span>
+                            <span class="{{$menu == 'Usuarios' ? 'arrow open' : 'arrow'}}"></span>
+                        </a>
+                        <ul class="sub-menu" style="{{$menu == 'Usuarios' ? 'display: block;' : ''}}">
+                            <li class="{{$title == 'Usuarios Sistema' ? 'active' : ''}}"><a href="<?php echo url();?>/usuarios/sistema">Usuarios (sistema)</a></li> 
+                            <li class="{{$title == 'Usuarios App' ? 'active' : ''}}"><a href="<?php echo url();?>/usuarios/app">Usuarios (app)</a></li>
+                        </ul>
+                    </li>
+                    <!-- END ONE LEVEL MENU -->
+                    
+                    <!-- BEGIN SINGLE LINK -->
+                    <li class="loggingOut">
+                        <a href="#">
+                            <i class="fa fa-power-off" aria-hidden="true"></i>
+                            <span class="title">Cerrar sesión</span>
+                        </a>
+                    </li>
+                    <!-- END SINGLE LINK -->
+                    <!-- BEGIN SINGLE LINK -->
+                    <li class="">
+                        <a href="#">
+                            <i class="" aria-hidden="true"></i>
+                            <span class="title"></span>
+                        </a>
+                    </li>
+                    <!-- END SINGLE LINK --> 
+                    <!-- END ONE LEVEL MENU -->     
+                </ul>
+                <!-- END SIDEBAR MENU -->
             </div>
-            <!-- END MINI-PROFILE -->
-            <!-- BEGIN SIDEBAR MENU --> 
-            <p class="menu-title">Secciones<span class="pull-right"><a href=""><i class="fa fa-refresh"></i></a></span></p>
-            <ul>    
-                <!-- BEGIN SELECTED LINK -->
-                <li class="start {{$menu == 'Inicio' ? 'active' : ''}}">
-                    <a href="<?php echo url();?>/dashboard">
-                        <i class="icon-custom-home"></i>
-                        <span class="title">Inicio</span>
-                        <span class="selected"></span>
-                    </a>
-                </li>
-                <!-- END SELECTED LINK -->
-
-                <!-- BEGIN SINGLE LINK -->
-                <li class="{{$menu == 'Pedidos' ? 'active' : ''}}">
-                    <a href="{{url('pedidos')}}">
-                        <i class="fa fa-cubes" aria-hidden="true"></i>
-                        <span class="title">Pedidos</span>
-                    </a>
-                </li>
-                <!-- END SINGLE LINK -->
-
-                <!-- BEGIN SINGLE LINK -->
-                <li class="{{$menu == 'Colores' ? 'active' : ''}}">
-                    <a href="<?php echo url();?>/colores">
-                        <i class="fa fa-upload" aria-hidden="true"></i>
-                        <span class="title">Cargar colores</span>
-                    </a>
-                </li>
-                <!-- END SINGLE LINK -->
-
-                <!-- BEGIN SINGLE LINK -->
-                <li class="{{$menu == 'Asigar colores categoría' ? 'active' : ''}}">
-                    <a href="<?php echo url();?>/asignar_color_categorias">
-                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                        <span class="title">Asigar colores categoría</span>
-                    </a>
-                </li>
-                <!-- END SINGLE LINK -->
-
-                <!-- BEGIN SINGLE LINK -->
-                <li class="{{$menu == 'Asigar fotos categoría' ? 'active' : ''}}">
-                    <a href="<?php echo url();?>/asignar_foto_categorias">
-                        <i class="fa fa-picture-o" aria-hidden="true"></i>
-                        <span class="title">Asigar fotos categoría</span>
-                    </a>
-                </li>
-                <!-- END SINGLE LINK -->
-                
-                <!-- BEGIN SINGLE LINK -->
-                <li class="{{$menu == 'Productos' ? 'active' : ''}}">
-                    <a href="{{url('productos')}}">
-                        <i class="fa fa-tree" aria-hidden="true"></i>
-                        <span class="title">Productos</span>
-                    </a>
-                </li>
-                <!-- END SINGLE LINK -->
-
-                <!-- BEGIN SINGLE LINK -->
-                <li class="{{$menu == 'Noticias' ? 'active' : ''}}">
-                    <a href="{{url('noticias')}}">
-                        <i class="fa fa-newspaper-o" aria-hidden="true"></i>
-                        <span class="title">Noticias</span>
-                    </a>
-                </li>
-                <!-- END SINGLE LINK -->
-
-                <!-- BEGIN SINGLE LINK -->
-                <li class="{{$menu == 'Ionic' ? 'active' : ''}}">
-                    <a href="<?php echo url();?>/notificaciones_app">
-                        <i class="fa fa-bell" aria-hidden="true"></i>
-                        <span class="title">Notificaciones app</span>
-                    </a>
-                </li>
-                <!-- END SINGLE LINK -->
-                
-                <!-- BEGIN ONE LEVEL MENU -->
-                <li class="{{$menu == 'Usuarios' ? 'open start' : ''}}">
-                    <a href="javascript:;">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        <span class="title">Usuarios</span>
-                        <span class="{{$menu == 'Usuarios' ? 'arrow open' : 'arrow'}}"></span>
-                    </a>
-                    <ul class="sub-menu" style="{{$menu == 'Usuarios' ? 'display: block;' : ''}}">
-                        <li class="{{$title == 'Usuarios Sistema' ? 'active' : ''}}"><a href="<?php echo url();?>/usuarios/sistema">Usuarios (sistema)</a></li> 
-                        <li class="{{$title == 'Usuarios App' ? 'active' : ''}}"><a href="<?php echo url();?>/usuarios/app">Usuarios (app)</a></li>
-                    </ul>
-                </li>
-                <!-- END ONE LEVEL MENU -->
-                
-                <!-- BEGIN SELECTED LINK -->
-                {{-- <li class="{{$menu == 'Configuraciones' ? 'active' : ''}}">
-                    <a href="javascript:;">
-                        <i class="fa fa-cogs" aria-hidden="true"></i>
-                        <span class="title">Configuraciones</span>
-                        <span class="{{$menu == 'Configuraciones' ? 'arrow open' : 'arrow'}}"></span>
-                    </a>
-                    <ul class="sub-menu" style="{{$menu == 'Configuraciones' ? 'display: block;' : ''}}">
-                        <li class="{{$title == 'Preguntas frecuentes' ? 'active' : ''}}"><a href="{{ url('configuracion/preguntas_frecuente')}}">Preguntas frecuentes</a></li>
-                    </ul>
-                </li> --}}
-                <!-- END SELECTED LINK -->
-
-                <!-- BEGIN SINGLE LINK -->
-                <li class="loggingOut">
-                    <a href="#">
-                        <i class="fa fa-power-off" aria-hidden="true"></i>
-                        <span class="title">Cerrar sesión</span>
-                    </a>
-                </li>
-                <!-- END SINGLE LINK -->
-                <!-- BEGIN SINGLE LINK -->
-                <li class="">
-                    <a href="#">
-                        <i class="" aria-hidden="true"></i>
-                        <span class="title"></span>
-                    </a>
-                </li>
-                <!-- END SINGLE LINK --> 
-                <!-- END ONE LEVEL MENU -->     
-            </ul>
-            <!-- END SIDEBAR MENU -->
         </div>
-        </div>
-        <!-- BEGIN SCROLL UP HOVER -->
-        <a href="#" class="scrollup">Scroll</a>
-        <!-- END SCROLL UP HOVER -->
         <!-- END MENU -->
-        <!-- BEGIN SIDEBAR FOOTER WIDGET -->
-        <div class="footer-widget">     
-            <div class="progress transparent progress-small no-radius no-margin">
-                <div data-percentage="100%" class="progress-bar progress-bar-success animate-progress-bar"></div>       
-            </div>
-            <div class="pull-right">
-                <div class="details-status">
-                    <span data-animation-duration="1200" data-value="100" class="animate-number"></span>%
-                </div>  
-                <a href="#" class="loggingOut"><i class="fa fa-power-off"></i></a>
-            </div>
-        </div>
-        <!-- END SIDEBAR FOOTER WIDGET -->
+
         <!-- END SIDEBAR --> 
         <!-- BEGIN PAGE CONTAINER-->
 
