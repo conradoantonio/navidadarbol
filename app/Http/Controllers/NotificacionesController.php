@@ -27,8 +27,7 @@ class NotificacionesController  extends Controller
      */
     public function index()
     {
-        $title = 'Notificaciones App';
-        $menu = 'Ionic';
+        $menu = $title = 'Notificaciones App';
         $actual_date = date('Y-m-d');
         $usuarios = Usuario::where('status', 1)->get();
         return view('notificaciones.index', ['menu' => $menu, 'title' => $title, 'usuarios' => $usuarios, 'start_date' => $actual_date]);

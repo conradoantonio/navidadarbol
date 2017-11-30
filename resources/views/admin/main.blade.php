@@ -206,7 +206,7 @@
                     <!-- END SINGLE LINK -->
 
                     <!-- BEGIN SINGLE LINK -->
-                    <li class="{{$menu == 'Ionic' ? 'active' : ''}}">
+                    <li class="{{$menu == 'Notificaciones App' ? 'active' : ''}}">
                         <a href="<?php echo url();?>/notificaciones_app">
                             <i class="fa fa-bell" aria-hidden="true"></i>
                             <span class="title">Notificaciones app</span>

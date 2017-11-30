@@ -24,9 +24,9 @@
 							        <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
 							        <strong>Nota: </strong><br>
 							        - Complete los campos llamados fecha y hora para programar el momento en que debe enviarse la notificación.<br>
+							        - No se pueden programar notificaciones para ser enviadas en fechas u horarios que ya pasaron.<br>
+							        - En caso de querer envíar la notificación inmediatamente, deje los campos de fecha y hora vacíos.<br>
 							        - Las notificaciones no pueden ser canceladas una vez sean programadas.<br>
-							        - Si desea solamente envíar la notificación inmediatamente, deje los campos de fecha y hora vacíos.<br>
-							        - No pueden programar notificación para ser enviadas en fechas con horas pasadas.<br>
 							    </div>
 							</div>
 						</div>
