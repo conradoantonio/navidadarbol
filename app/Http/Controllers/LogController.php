@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Requests\loginRequest;
 use App\Http\Controllers\Controller;
 use App\Usuario;
+use App\User;
 use App\Servicio;
 use App\Cotizaciones;
 use DB;
@@ -24,7 +25,7 @@ class LogController extends Controller
      */
     public function index()
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             $title = 'Inicio';
             $menu = 'Inicio';
             $dashboard = $this->dashboard_data_admin();
@@ -32,7 +33,7 @@ class LogController extends Controller
 
             return view('admin.dashboard', ['title' => $title, 'menu' => $menu, 'dashboard' => json_decode($dashboard), 'ventas_semanales' => $ventas_semanales]);
         } else {
-            return redirect::to('/');
+            return redirect()->to('/');
         }
     }
 
@@ -44,10 +45,24 @@ class LogController extends Controller
      */
     public function store(loginRequest $request)
     {
-        if (Auth::attempt(['user' => $request['user'], 'password' => $request['password']])) {
-            return Redirect::to('dashboard');
+        if (auth()->attempt(['user' => $request['user'], 'password' => $request['password'], 'status' => 1])) {
+            return redirect()->to('dashboard');
+        } else {
+             $exist = User::where('user', $request['user'])->first();
+            if ( !$exist ) {
+                session()->forget('account');
+                $msg = [ 'user' => 'Usuario inválido'];
+            } else {
+                if ( !$exist->status ) {
+                    $msg = [ 'status' => 'No tienes acceso al panel'];
+                    session(['account' => $request['user']]);
+                } else {
+                    $msg = [ 'password' => 'Contraseña incorrecta'];
+                    session(['account' => $request['user']]);
+                }
+            }
+            return redirect()->back()->withErrors($msg);
         }
-        return Redirect::to('/');
     }
 
     /**
@@ -57,8 +72,8 @@ class LogController extends Controller
      */
     public function logout() 
     {
-        Auth::logout();
-        return Redirect('/');
+        auth()->logout();
+        return redirect('/');
     }
 
     /**
@@ -103,7 +118,7 @@ class LogController extends Controller
 
         $array_wd = array();
         foreach ($query as $value) {
-            array_push($array_wd, $value->created_at);
+            $array_wd [] = $value->created_at->format('Y-m-d');
         }
 
         $numero_logs = array();
@@ -112,7 +127,6 @@ class LogController extends Controller
         }
         
         $final_array = $semana;
-
         foreach ($final_array as $key => $value) { $final_array[$key] = 0; }
 
         foreach ($array_wd as $key => $val) {

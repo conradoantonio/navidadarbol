@@ -34,3 +34,6 @@
 .page-sidebar .page-sidebar-wrapper > ul > li.active {
 	background-color: #D03918 !important;
 }
+.last-li-item {
+	margin-bottom: 10% !important;
+}

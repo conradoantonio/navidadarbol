@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title></title>
+    <link rel="shortcut icon" href="{{ asset('img/favicon24x24.png')}}" />
     <link rel="stylesheet" href="{{ asset('plugins/pace/pace-theme-flash.css')}}"  type="text/css" media="screen"/>
     <link rel="stylesheet" href="{{ asset('plugins/jquery-scrollbar/jquery.scrollbar.css')}}"  type="text/css"/>
     <link rel="stylesheet" href="{{ asset('plugins/boostrapv3/css/bootstrap.min.css')}}"  type="text/css"/>
@@ -129,11 +130,11 @@
                 <!-- BEGIN MINI-PROFILE -->
                 <div class="user-info-wrapper"> 
                     <div class="profile-wrapper">
-                        <img src=" {{ asset(Auth::user()->foto_usuario) }}" alt="" data-src=" {{ asset(Auth::user()->foto_usuario) }}" data-src-retina=" {{ asset(Auth::user()->foto_usuario) }}" width="69" height="69" />
+                        <img src=" {{ asset(auth()->user()->foto_usuario) }}" alt="" data-src=" {{ asset(auth()->user()->foto_usuario) }}" data-src-retina=" {{ asset(auth()->user()->foto_usuario) }}" width="69" height="69" />
                     </div>
                     <div class="user-info">
                         <div class="greeting">Bienvenido</div>
-                        <div class="username"><span class="semi-bold">{{Auth::user()->user}}</span></div>
+                        <div class="username"><span class="semi-bold">{{auth()->user()->user}}</span></div>
                         <div class="status">Status<a href="#"><div class="status-icon green"></div>Online</a></div>
                     </div>
                 </div>
@@ -143,7 +144,7 @@
                 <ul>    
                     <!-- BEGIN SELECTED LINK -->
                     <li class="start {{$menu == 'Inicio' ? 'active' : ''}}">
-                        <a href="<?php echo url();?>/dashboard">
+                        <a href="{{url('dashboard')}}">
                             <i class="icon-custom-home"></i>
                             <span class="title">Inicio</span>
                             <span class="selected"></span>
@@ -162,7 +163,7 @@
 
                     <!-- BEGIN SINGLE LINK -->
                     <li class="{{$menu == 'Colores' ? 'active' : ''}}">
-                        <a href="<?php echo url();?>/colores">
+                        <a href="{{url('colores')}}">
                             <i class="fa fa-upload" aria-hidden="true"></i>
                             <span class="title">Cargar colores</span>
                         </a>
@@ -171,7 +172,7 @@
 
                     <!-- BEGIN SINGLE LINK -->
                     <li class="{{$menu == 'Asigar colores categoría' ? 'active' : ''}}">
-                        <a href="<?php echo url();?>/asignar_color_categorias">
+                        <a href="{{url('asignar_color_categorias')}}">
                             <i class="fa fa-check-square-o" aria-hidden="true"></i>
                             <span class="title">Asigar colores categoría</span>
                         </a>
@@ -180,7 +181,7 @@
 
                     <!-- BEGIN SINGLE LINK -->
                     <li class="{{$menu == 'Asigar fotos categoría' ? 'active' : ''}}">
-                        <a href="<?php echo url();?>/asignar_foto_categorias">
+                        <a href="{{url('asignar_foto_categorias')}}">
                             <i class="fa fa-picture-o" aria-hidden="true"></i>
                             <span class="title">Asigar fotos categoría</span>
                         </a>
@@ -207,7 +208,7 @@
 
                     <!-- BEGIN SINGLE LINK -->
                     <li class="{{$menu == 'Notificaciones App' ? 'active' : ''}}">
-                        <a href="<?php echo url();?>/notificaciones_app">
+                        <a href="{{url('notificaciones_app')}}">
                             <i class="fa fa-bell" aria-hidden="true"></i>
                             <span class="title">Notificaciones app</span>
                         </a>
@@ -222,8 +223,8 @@
                             <span class="{{$menu == 'Usuarios' ? 'arrow open' : 'arrow'}}"></span>
                         </a>
                         <ul class="sub-menu" style="{{$menu == 'Usuarios' ? 'display: block;' : ''}}">
-                            <li class="{{$title == 'Usuarios Sistema' ? 'active' : ''}}"><a href="<?php echo url();?>/usuarios/sistema">Usuarios (sistema)</a></li> 
-                            <li class="{{$title == 'Usuarios App' ? 'active' : ''}}"><a href="<?php echo url();?>/usuarios/app">Usuarios (app)</a></li>
+                            <li class="{{$title == 'Usuarios Sistema' ? 'active' : ''}}"><a href="{{ url('usuarios/sistema') }}">Usuarios (sistema)</a></li> 
+                            <li class="{{$title == 'Usuarios App' ? 'active' : ''}}"><a href="{{ url('usuarios/app') }}">Usuarios (app)</a></li>
                         </ul>
                     </li>
                     <!-- END ONE LEVEL MENU -->
@@ -231,19 +232,11 @@
                     <!-- BEGIN SINGLE LINK -->
                     <li class="loggingOut">
                         <a href="#">
-                            <i class="fa fa-power-off" aria-hidden="true"></i>
+                            <i class="fa fa-power-off last-li-item" aria-hidden="true"></i>
                             <span class="title">Cerrar sesión</span>
                         </a>
                     </li>
                     <!-- END SINGLE LINK -->
-                    <!-- BEGIN SINGLE LINK -->
-                    <li class="">
-                        <a href="#">
-                            <i class="" aria-hidden="true"></i>
-                            <span class="title"></span>
-                        </a>
-                    </li>
-                    <!-- END SINGLE LINK --> 
                     <!-- END ONE LEVEL MENU -->     
                 </ul>
                 <!-- END SIDEBAR MENU -->
@@ -259,14 +252,14 @@
                 <div class="modal-content">
                     <div class="modal-header text-center">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="titulo-form-cambiar-contra-main">Cambio de contraseña para usuario {{Auth::user()->user}}</h4>
+                        <h4 class="modal-title" id="titulo-form-cambiar-contra-main">Cambio de contraseña para usuario {{auth()->user()->user}}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-sm-12 col-xs-12 hidden">
                                 <div class="form-group">
                                     <label for="id">ID</label>
-                                    <input type="text" id="id" value="{{Auth::user()->id}}">
+                                    <input type="text" id="id" value="{{auth()->user()->id}}">
                                 </div>
                             </div>
                             <div class="col-sm-12 col-xs-12">
@@ -302,16 +295,16 @@
                 <div class="modal-content">
                     <div class="modal-header text-center">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="titulo-form-cambiar-contra-main">Cambio de foto de perfil para {{Auth::user()->user}}</h4>
+                        <h4 class="modal-title" id="titulo-form-cambiar-contra-main">Cambio de foto de perfil para {{auth()->user()->user}}</h4>
                     </div>
-                    <form id="cargar_foto_usuario" action="<?php echo url();?>/usuarios/sistema/guardar_foto_usuario_sistema" enctype="multipart/form-data" method="POST">
+                    <form id="cargar_foto_usuario" action="{{url('usuarios/sistema/guardar_foto_usuario_sistema')}}" enctype="multipart/form-data" method="POST">
                         <div class="modal-body">
-                            <input type="hidden" id="token" name="_token" empresa-id="{{Auth::user()->empresa_id}}" base-url="<?php echo url();?>" value="{{csrf_token()}}">
+                            <input type="hidden" id="token" name="_token" empresa-id="{{auth()->user()->empresa_id}}" base-url="{{url()}}" value="{{csrf_token()}}">
                             <div class="row">
                                 <div class="col-sm-12 col-xs-12 hidden">
                                     <div class="form-group">
                                         <label for="id">ID</label>
-                                        <input type="text" id="id" name="id" value="{{Auth::user()->id}}">
+                                        <input type="text" id="id" name="id" value="{{auth()->user()->id}}">
                                     </div>
                                 </div>
                             </div>

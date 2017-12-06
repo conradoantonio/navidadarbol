@@ -90,7 +90,7 @@
 			<span style="color: white;">Restablecimiento de contraseña para su usuario en la aplicación Papá Noel</span>
 		</div>
 		<div class="recibo_body" style="width: 75%;margin: auto;border: 1px solid black;border-radius: 0px 0px 5px 5px;padding-bottom: 15px;">
-			<div class="upper referencia" style="text-transform: uppercase;margin: auto;width: 70%;">
+			<div class="referencia" style="margin: auto;width: 70%;">
 				<h3>Contraseña nueva:</h3>
 				<span class="numero" style="display: block;font-weight: 900;border: 1px solid black;text-align: center;padding: 10px;letter-spacing: 8px;border-radius: 10px;">{{$contra}}</span>
 			</div>
