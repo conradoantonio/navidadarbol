@@ -48,7 +48,7 @@ class CheckOxxoOrder extends Command
                 $fecha_actual = $this->actual_datetime;
                 $fecha_pedido = $pedido->created_at;
 
-                echo $difference_in_seconds = strtotime($fecha_actual) - strtotime($fecha_pedido);
+                $difference_in_seconds = strtotime($fecha_actual) - strtotime($fecha_pedido);
 
                 if ($difference_in_seconds >= 86400) {
 

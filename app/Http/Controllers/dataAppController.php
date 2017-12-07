@@ -32,7 +32,7 @@ use PDO;
 use DB;
 
 require_once("conekta-php-master/lib/Conekta.php");
-\Conekta\Conekta::setApiKey("key_eRGsuxt67Lzciesx9XwjfQ");
+\Conekta\Conekta::setApiKey("key_2EhmxkUCovSBNvCcXyARog");
 \Conekta\Conekta::setApiVersion("2.0.0");
 
 class dataAppController extends Controller

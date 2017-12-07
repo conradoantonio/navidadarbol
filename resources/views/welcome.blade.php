@@ -118,7 +118,7 @@
                             <div class="form-group">
                                 <label for="password" class="col-sm-2 control-label"><i class="fa fa-2x fa-lock" aria-hidden="true"></i></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="password" name="password" placeholder="Contraseña">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña">
                                 </div>
                             </div>
                             @if ($errors->has('password'))

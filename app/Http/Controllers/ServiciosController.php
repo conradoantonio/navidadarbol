@@ -11,13 +11,10 @@ use App\Servicio;
 use App\Estilista;
 use App\ServicioDetalle;
 use DB;
-use Auth;
-use PDO;
-use Redirect;
 use Mail;
 
 require_once("conekta-php-master/lib/Conekta.php");
-\Conekta\Conekta::setApiKey("key_wsnGdPKAe4pyTFhCs84qVw");
+\Conekta\Conekta::setApiKey("key_2EhmxkUCovSBNvCcXyARog");
 \Conekta\Conekta::setApiVersion("2.0.0");
 
 class ServiciosController extends Controller
@@ -29,7 +26,7 @@ class ServiciosController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::check()) {
+        if (auth()->check()) {
             $title = "Pedidos";
             $menu = "Pedidos";
             $pedidos = Servicio::pedidos_detalles();
@@ -40,7 +37,7 @@ class ServiciosController extends Controller
 
             return view('pedidos.pedidos', ['pedidos' => $pedidos, 'menu' => $menu, 'title' => $title]);
         } else {
-            return Redirect::to('/');
+            return redirect()->to('/');
         }
     }
 
@@ -136,7 +133,10 @@ class ServiciosController extends Controller
                         $message->to($to);
                         $message->subject($subject);
                     });
+
+                    return response(['msg' => 'Notificado'], 200);
                 }//If para verificar que exista una orden con dicho order_id
+                return response(['msg' => 'Cargo pagado recibido'], 200);
             }//If para verificar status del pago
         }//If que verifica tipo de pago
     }
